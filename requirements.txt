@@ -1,0 +1,15 @@
+# Deep Learning Framework
+torch
+torchvision
+
+# Web Application
+streamlit
+
+# Data Processing & Visualization
+pandas
+numpy
+matplotlib
+scikit-learn
+Pillow
+tqdm
+jupyter
