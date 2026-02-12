@@ -8,8 +8,8 @@ import re
 import os
 from collections import Counter
 
-# --- Styling & Configuration ---
-st.set_page_config(page_title="Neural Storyteller", page_icon="📸", layout="wide")
+
+st.set_page_config(page_title="Neural Storyteller", page_icon="📸", layout="wide", initial_sidebar_state="expanded")
 
 st.markdown("""
     <style>
@@ -74,16 +74,13 @@ st.markdown("""
         border-color: #FF416C;
     }
 
-    /* Hide streamlit header and footer */
-    header {visibility: hidden;}
     footer {visibility: hidden;}
     </style>
 """, unsafe_allow_html=True)
 
-# Setting device
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# Vocabulary class needs to be defined for pickle to load the vocab object
 class Vocabulary:
     def __init__(self, freq_threshold):
         self.itos = {0: "<pad>", 1: "<start>", 2: "<end>", 3: "<unk>"}
@@ -201,14 +198,13 @@ def load_all():
     res = nn.Sequential(*list(res.children())[:-1])
     return model.eval(), vocab, res.to(device).eval()
 
-# --- App Layout ---
 
 st.markdown('<div class="main-header">Neural Storyteller 📸</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-header">AI-Powered Image Captioning with Deep Learning</div>', unsafe_allow_html=True)
 
 model, vocab, resnet = load_all()
 
-# Sidebar for configuration
+
 with st.sidebar:
     st.markdown("### ⚙️ Settings")
     method = st.radio("Generation Method:", ("Greedy Search", "Beam Search"), help="Beam search is more accurate but slower.")
@@ -216,11 +212,11 @@ with st.sidebar:
     st.markdown("### ℹ️ About")
     st.info("This app uses a ResNet-50 encoder and an LSTM decoder to generate descriptive captions for images.")
 
-# --- State Management ---
+
 if 'selected_img' not in st.session_state:
     st.session_state.selected_img = None
 
-# Main content tabs
+
 tab1, tab2 = st.tabs(["🖼️ Sample Gallery", "📤 Upload Custom Image"])
 
 with tab1:
@@ -229,7 +225,7 @@ with tab1:
     if os.path.exists(SAMPLES_DIR):
         sample_files = [f for f in os.listdir(SAMPLES_DIR) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
         if sample_files:
-            # Create a grid
+           
             cols = st.columns(3)
             for idx, sample in enumerate(sample_files):
                 with cols[idx % 3]:
@@ -248,7 +244,7 @@ with tab2:
     if file:
         st.session_state.selected_img = Image.open(file).convert('RGB')
 
-# Process selected image
+
 if st.session_state.selected_img:
     col1, col2 = st.columns([1, 1])
     
